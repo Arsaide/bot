@@ -25,6 +25,7 @@ const getGroupCollection = async groupId => {
         last_name: String,
         username: String,
         lastRequest: {type: Date, default: null},
+        flower: {type: Number, default: 0},
     })
 
     mongoose.model(modelName, groupSchema);

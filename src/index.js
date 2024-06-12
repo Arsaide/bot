@@ -28,7 +28,7 @@ connectDB().then(() => {
             description: 'Получить приветствие',
         },
         {
-            command: 'check',
+            command: 'dick',
             description: 'Проверить интервал',
         }
     ]).catch(e => {
@@ -38,7 +38,7 @@ connectDB().then(() => {
 
     bot.command('start', startCommand);
 
-    bot.command('check', checkInCommand)
+    bot.command('dick', checkInCommand)
 
     bot.hears(['Анечка', 'Кирилл', 'анечка', 'кирилл'], async (ctx) => {
         if (ctx.msg.text === 'Анечка') {

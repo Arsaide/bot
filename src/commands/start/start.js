@@ -9,13 +9,13 @@ const startCommand = async (ctx) => {
         };
 
         if(ctx.chat.type === 'group') {
-            await ctx.reply('Эта команда доступна только в личном чате')
+            await ctx.reply('Ця команда доступна лише в особистому чаті')
         } else if (ctx.chat.type === 'private') {
             await User.findOneAndUpdate({ id: user.id }, user, { upsert: true, new: true });
-            await ctx.reply('Привет! Ты успешно добавлен в базу данных.');
+            await ctx.reply('Ти успішно доданий до бази даних.');
         }
     } catch (error) {
-        await ctx.reply('Что то пошло не так')
+        await ctx.reply('Щось пішло не так')
         console.error('Start command error', error)
     }
 };

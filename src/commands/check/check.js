@@ -1,8 +1,9 @@
-const { getGroupCollection, User} = require('../../db/database');
+const { getGroupCollection} = require('../../db/database');
+const { growProgress } = require("../../func/calc");
 
 const checkInCommand = async (ctx) => {
     if(ctx.chat.type === 'private') {
-        await ctx.reply('Эта команда доступна только в группах.');
+        await ctx.reply('Ця команда доступна лише у групах.');
         return;
     }
 
@@ -11,15 +12,15 @@ const checkInCommand = async (ctx) => {
         const user = await GroupUser.findOne({ id: ctx.from.id });
 
         const now = new Date();
-        const fiveMinutes = 60 * 1000;
+        const fiveMinutes = 1000;
 
         if (user) {
             if (user.lastRequest && (now - user.lastRequest) < fiveMinutes) {
-                await ctx.reply(`${ctx.from.username}, Вы можете отправлять запросы раз в 1 минут. Попробуйте позже.`);
+                await ctx.reply(`${ctx.from.username}, Ви можете надсилати запити раз на 1 хвилину. Спробуй пізніше.`);
             } else {
                 user.lastRequest = now;
                 await user.save();
-                await ctx.reply(`@${ctx.from.username}, Ваш запрос принят.`);
+                await growProgress(ctx);
             }
         } else {
             const newUser = new GroupUser({
@@ -28,13 +29,14 @@ const checkInCommand = async (ctx) => {
                 last_name: ctx.from.last_name,
                 username: ctx.from.username,
                 lastRequest: now,
+                flower: 0,
             });
             await newUser.save();
-            await ctx.reply(`@${ctx.from.username}, Ваш запрос принят.`);
+            await growProgress(ctx);
         }
     } catch (error) {
         console.error('Ошибка при выполнении команды checkInCommand:', error);
-        await ctx.reply('Произошла ошибка при выполнении команды. Пожалуйста, попробуйте позже.');
+        await ctx.reply('Сталася помилка під час виконання команди. Будь ласка, спробуйте пізніше.');
     }
 };
 
