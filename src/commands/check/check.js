@@ -19,7 +19,7 @@ const checkInCommand = async (ctx) => {
             } else {
                 user.lastRequest = now;
                 await user.save();
-                await ctx.reply('Ваш запрос принят.');
+                await ctx.reply(`@${ctx.from.username}, Ваш запрос принят.`);
             }
         } else {
             const newUser = new GroupUser({
@@ -30,7 +30,7 @@ const checkInCommand = async (ctx) => {
                 lastRequest: now,
             });
             await newUser.save();
-            await ctx.reply(`${ctx.from.username}, Ваш запрос принят.`);
+            await ctx.reply(`@${ctx.from.username}, Ваш запрос принят.`);
         }
     } catch (error) {
         console.error('Ошибка при выполнении команды checkInCommand:', error);
