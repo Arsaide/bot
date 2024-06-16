@@ -1,5 +1,7 @@
 const { getGroupCollection} = require('../../db/database');
-const { growProgress } = require("../../func/calc");
+const { growProgress } = require("../../middleware/growProgress");
+const {formatTimeLeft} = require("../../middleware/formatTimeLeft");
+const {getDickRank} = require("../../middleware/getDickRank")
 
 const checkInCommand = async (ctx) => {
     if(ctx.chat.type === 'private') {
@@ -12,11 +14,16 @@ const checkInCommand = async (ctx) => {
         const user = await GroupUser.findOne({ id: ctx.from.id });
 
         const now = new Date();
-        const fiveMinutes = 1000;
+        const userLastRequestTime = new Date(user.lastRequest);
+
+        const nextAllowedTime = new Date(userLastRequestTime);
+        nextAllowedTime.setDate(nextAllowedTime.getDate() + 1);
+        nextAllowedTime.setHours(6, 0, 0, 0);
 
         if (user) {
-            if (user.lastRequest && (now - user.lastRequest) < fiveMinutes) {
-                await ctx.reply(`${ctx.from.username}, Ви можете надсилати запити раз на 1 хвилину. Спробуй пізніше.`);
+            if (now < nextAllowedTime) {
+                const timeLeft = formatTimeLeft(nextAllowedTime - now);
+                await ctx.reply(`@${ctx.from.username}, \nСпроба оновлюэться кожного дня о 6:00. \nЗалишилось часу до настпної спроби: ${timeLeft}\nТвій пісюн: ${user.flower} см. \nРанг пісюна: <b><i>${getDickRank(user.flower)}</i></b>.`, {parse_mode: "HTML"});
             } else {
                 user.lastRequest = now;
                 await user.save();

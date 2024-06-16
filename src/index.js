@@ -5,10 +5,10 @@ const { checkInCommand } = require('./commands/check/check');
 const { startCommand } = require('./commands/start/start');
 
 const bot = new Bot(process.env.BOT_API_KEY);
-
+// const bot = new Bot(process.env.BOT_TEST_API_KEY);
 const startBot = async () => {
     try {
-        await new Promise(resolve => setTimeout(resolve, 2000)); // Задержка в 2 секунды
+        await new Promise(resolve => setTimeout(resolve, 2000));
         bot.start();
     } catch (e) {
         console.error('Failed to start bot', e);
@@ -21,15 +21,11 @@ connectDB().then(() => {
     bot.api.setMyCommands([
         {
             command: 'start',
-            description: 'Запускает бота',
-        },
-        {
-            command: 'hello',
-            description: 'Получить приветствие',
+            description: 'Старт бота',
         },
         {
             command: 'dick',
-            description: 'Проверить интервал',
+            description: 'Виростити огромний хуй',
         }
     ]).catch(e => {
         console.error('Failed to set bot commands', e);

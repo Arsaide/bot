@@ -1,4 +1,5 @@
 const { getGroupCollection } = require('../db/database');
+const {getDickRank} = require("./getDickRank");
 
 async function growProgress(ctx) {
     try {
@@ -10,20 +11,20 @@ async function growProgress(ctx) {
 
             const randomNumber = Math.floor(Math.random() * 100);
 
-            if(randomNumber < 1) {
+            if (randomNumber < 1) {
                 growth = 15;
             } else if (randomNumber < 35) {
-                growth = -Math.floor(Math.random() * 11);
+                growth = -Math.floor(Math.random() * 10) - 1; // -10 -> -1
             } else {
-                growth = Math.floor(Math.random() * 11);
+                growth = Math.floor(Math.random() * 10) + 1; // 1 -> 10
             }
 
             user.flower += growth;
             await user.save();
 
-            await ctx.reply(`@${ctx.from.username}, ваша квітка виросла на ${growth} см. Усього у вас ${user.flower} см.`);
+            await ctx.reply(`@${ctx.from.username}, твій пісюн виріс на ${growth} см. У тебе ${user.flower} см. Ранг пісюна: ${getDickRank(user.flower)}`);
         } else {
-            await ctx.reply(`Не вдалося знайти користувача або значення flower не визначено.`);
+            await ctx.reply(`Сталася помилка в розрахуйнках або не вдалося знайти користувача або твій пісюн занадто маленький, що бот його не визначив...`);
         }
 
         console.log('Квітка виросла на випадкову кількість умовних одиниць');
