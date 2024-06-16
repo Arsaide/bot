@@ -14,16 +14,17 @@ const checkInCommand = async (ctx) => {
         const user = await GroupUser.findOne({ id: ctx.from.id });
 
         const now = new Date();
-        const userLastRequestTime = new Date(user.lastRequest);
-
-        const nextAllowedTime = new Date(userLastRequestTime);
-        nextAllowedTime.setDate(nextAllowedTime.getDate() + 1);
-        nextAllowedTime.setHours(6, 0, 0, 0);
 
         if (user) {
+            const userLastRequestTime = new Date(user.lastRequest);
+
+            const nextAllowedTime = new Date(userLastRequestTime);
+            nextAllowedTime.setDate(nextAllowedTime.getDate() + 1);
+            nextAllowedTime.setHours(6, 0, 0, 0);
+
             if (now < nextAllowedTime) {
                 const timeLeft = formatTimeLeft(nextAllowedTime - now);
-                await ctx.reply(`@${ctx.from.username}, \nСпроба оновлюэться кожного дня о 6:00. \nЗалишилось часу до настпної спроби: ${timeLeft}\nТвій пісюн: ${user.flower} см. \nРанг пісюна: <b><i>${getDickRank(user.flower)}</i></b>.`, {parse_mode: "HTML"});
+                await ctx.reply(`@${ctx.from.username}, \nСпроба оновлюється щодня о 6:00. \nЗалишилось часу до наступної спроби: ${timeLeft}\nТвій пісюн: ${user.flower} см. \nРанг пісюна: <b><i>${getDickRank(user.flower)}</i></b>.`, {parse_mode: "HTML"});
             } else {
                 user.lastRequest = now;
                 await user.save();

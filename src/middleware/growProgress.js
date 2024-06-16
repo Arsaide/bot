@@ -1,6 +1,9 @@
 const { getGroupCollection } = require('../db/database');
 const {getDickRank} = require("./getDickRank");
 
+const negativeWords = ['зменшився', 'зав\'яв', 'розірвали', 'з\'їли'];
+const positiveWords = ['виріс', 'посипали содою і він виріс', 'созрів', 'зміцнився', 'витягнувся', 'розквітнув']
+
 async function growProgress(ctx) {
     try {
         const GroupUser = await getGroupCollection(ctx.chat.id);
@@ -22,9 +25,13 @@ async function growProgress(ctx) {
             user.flower += growth;
             await user.save();
 
-            await ctx.reply(`@${ctx.from.username}, твій пісюн виріс на ${growth} см. У тебе ${user.flower} см. Ранг пісюна: ${getDickRank(user.flower)}`);
+            const wordArray = growth < 0 ? negativeWords : positiveWords;
+            const randomIndex = Math.floor(Math.random() * wordArray.length);
+            const randomWord = wordArray[randomIndex];
+
+            await ctx.reply(`@${ctx.from.username}, твій пісюн ${randomWord} на ${growth} см. У тебе ${user.flower} см. Ранг пісюна: ${getDickRank(user.flower)}`);
         } else {
-            await ctx.reply(`Сталася помилка в розрахуйнках або не вдалося знайти користувача або твій пісюн занадто маленький, що бот його не визначив...`);
+            await ctx.reply(`Сталася помилка в розрахуйнках або не вдалося знайти користувача або твій пісюн занадто маленький, що навіть бот його не визначив...`);
         }
 
         console.log('Квітка виросла на випадкову кількість умовних одиниць');

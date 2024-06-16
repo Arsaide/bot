@@ -6,6 +6,7 @@ const { startCommand } = require('./commands/start/start');
 
 const bot = new Bot(process.env.BOT_API_KEY);
 // const bot = new Bot(process.env.BOT_TEST_API_KEY);
+
 const startBot = async () => {
     try {
         await new Promise(resolve => setTimeout(resolve, 2000));
@@ -25,7 +26,7 @@ connectDB().then(() => {
         },
         {
             command: 'dick',
-            description: 'Виростити огромний хуй',
+            description: 'Виростити огромний check',
         }
     ]).catch(e => {
         console.error('Failed to set bot commands', e);
